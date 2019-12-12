@@ -8,6 +8,7 @@ import by.epam.courierexchange.exception.CommandException;
 import by.epam.courierexchange.exception.ServiceException;
 import by.epam.courierexchange.service.ClientOfferRespondedService;
 import by.epam.courierexchange.service.CourierOfferRespondedService;
+import by.epam.courierexchange.service.RatingCourierService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,22 +16,21 @@ import static by.epam.courierexchange.command.ParamName.*;
 
 public class CourierFinishDealCommand implements Command {
     private static Logger logger = LogManager.getLogger();
-    private final static String REGEX_SPLIT = "\\s";
     private final static String REDIRECT_PATH = "/final/Controller?command=courier_show_deal";
 
     @Override
     public String execute(SessionRequestContent content) throws CommandException {
+        String declarer = content.getRequestParameters().get(DECLARER)[0];
+        int dealId = Integer.parseInt(content.getRequestParameters().get(DEAL_ID)[0]);
+        int courierId = Integer.parseInt(content.getRequestParameters().get(COURIER_ID)[0]);
         try {
-            int dealId = Integer.parseInt(content.getRequestParameters().get(FINISH)[0].split(REGEX_SPLIT)[0]);
-
-            System.out.println(dealId);
-
-            if (content.getRequestParameters().get(FINISH)[0].split(REGEX_SPLIT)[1].equals(COURIER)) {
+            if (declarer.equals(COURIER)) {
                 new CourierOfferRespondedService().changeStatus(dealId, OfferStatusType.COMPLETED);
             }
-            if (content.getRequestParameters().get(FINISH)[0].split(REGEX_SPLIT)[1].equals(CLIENT)) {
+            if (declarer.equals(CLIENT)) {
                 new ClientOfferRespondedService().changeStatus(dealId, OfferStatusType.COMPLETED);
             }
+            new RatingCourierService().insert(dealId, declarer, courierId, 0);
         } catch (ServiceException e) {
             logger.error("execute", e);
             throw new CommandException("execute", e);

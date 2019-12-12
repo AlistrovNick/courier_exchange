@@ -64,7 +64,7 @@ public class ClientOfferRespondedService {
         }
     }
 
-    public void delete(int offerId) throws ServiceException {
+    public void deleteByOfferId(int offerId) throws ServiceException {
         try {
             ClientOfferRespondedDaoImpl.INSTANCE.deleteByOfferId(offerId);
         } catch (DaoException e) {

@@ -133,9 +133,9 @@ public enum UserDaoImp implements UserDao {
     public void insert(User user, String password) throws DaoException {
         connection = ConnectionPool.INSTANCE.getConnection();
         try(PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT_INTO_USERS)) {
-            preparedStatement.setString(1, user.getEmail().toLowerCase());
-            preparedStatement.setString(2, user.getFirstName().toLowerCase());
-            preparedStatement.setString(3, user.getLastName().toLowerCase());
+            preparedStatement.setString(1, user.getEmail());
+            preparedStatement.setString(2, user.getFirstName());
+            preparedStatement.setString(3, user.getLastName());
             preparedStatement.setString(4, password);
             preparedStatement.setString(5, user.getRole().getRole());
             preparedStatement.executeUpdate();

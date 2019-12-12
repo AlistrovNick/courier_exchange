@@ -43,6 +43,11 @@ public enum CommandType {
             this.command = new ClientProcessingRespondCommand();
         }
     },
+    CLIENT_RATING_COURIER {
+        {
+            this.command = new ClientRatingCourierCommand();
+        }
+    },
     CLIENT_SEND_OFFER {
         {
             this.command = new ClientSendOfferCommand();
